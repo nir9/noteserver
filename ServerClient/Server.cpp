@@ -45,24 +45,30 @@ void StartServer()
 
 	// SOCKET rawSocket = socket(...)
 	// auto managedSocket = ManagedSocket(rawSocket)
+	// CR:The above
 	ManagedSocket mServerSocket(INVALID_SOCKET);
 	
 	mServerSocket.socket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 
 	if (mServerSocket.socket == INVALID_SOCKET)
 	{
+		// CR: throw exception("Error") instead of printf and the return
 		printf("Error:(\n");
 		return;
 	}
-
+	
+	// CR: Avoid doing complicated one-liners. bind and then in another line, check for errors
+	// CR: Instead of CheckForErrors, wrapping each api function is better. Like we did with bind.
+	//	That way. We can call the function without worring about error checking. Just like writing
+	//	high level programming languages. So fun!
 	CheckForErrors(GENERAL_ERROR, 
 		bind(mServerSocket.socket, hostInfo->ai_addr, (int)hostInfo->ai_addrlen), "Bind Error");
 
 	freeaddrinfo(hostInfo); // clean up
 
-
 	// Now after all these lets start listening shall we
 	if (listen(mServerSocket.socket, SOMAXCONN) == SOCKET_ERROR) {
+		// CR: throw
 		printf("Error Listening!\n");
 		return;
 	}
@@ -75,6 +81,7 @@ void StartServer()
 		
 		client.Accept(mServerSocket);
 		
+		// CR: Move this to a new thread. Try out std::thread :)
 		HandleConnection(client);
 
 		cout << "Got connection!" << endl;
@@ -95,7 +102,7 @@ void HandleConnection(ManagedSocket& client)
 	cout << recieved << endl;
 
 	string str(recieved.begin(), recieved.end());
-	vector<string>splitted;
+	vector<string> splitted;
 	char delimiter = ' ';
 	Split(str, delimiter, splitted);
 	
@@ -108,6 +115,7 @@ void HandleConnection(ManagedSocket& client)
 			string whattoreplace = "/?";
 			string withwhat = "";
 			ReplaceByString(note, whattoreplace, withwhat);
+			// CR: Consider using a global logger. Log("Note!"). ILogger for example
 			cout << "Note!!" << endl;
 			notes = notes + "<br/>" + note;
 		}

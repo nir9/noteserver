@@ -8,7 +8,7 @@
 
 class ManagedSocket {
 public:
-	// Members should be private
+	// CR:Members should be private
 	SOCKET socket;
 	int debugLevel = 1;
 	ManagedSocket();

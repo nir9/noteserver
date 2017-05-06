@@ -2,12 +2,13 @@
 #include <exception>
 #include <iostream>
 #include <string>
+#include <sstream>
 #include <vector>
 #include "Utils.h"
 
 using namespace std;
 
-void CheckForErrors(int errorType, int result, std::string log)
+void CheckForErrors(const int errorType, const int result, const std::string& log)
 {
 	BOOL error = FALSE;
 	if (errorType == GENERAL_ERROR && result != 0) {
@@ -53,4 +54,18 @@ void ReplaceByString(std::string& str, std::string& findstr, std::string& replac
 
  
 	str.replace(pos, findstr.size(), replacement);
+}
+
+// NOTE: This can return void
+int Wrappers::bind(SOCKET s, const sockaddr * name, int namelen)
+{
+	int result = ::bind(s, name, namelen);
+	if (SOCKET_ERROR == result)
+	{
+		stringstream ss("Failed to bind. Error code: ");
+		ss << WSAGetLastError();
+		throw exception(ss.str().c_str());
+	}
+
+	return result;
 }

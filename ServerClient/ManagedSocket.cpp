@@ -15,6 +15,7 @@ ManagedSocket::ManagedSocket(SOCKET socket)
 }
 
 
+// CR: string reference
 void ManagedSocket::Send(std::string buffer)
 {
 	int result = send(this->socket, buffer.c_str(), buffer.length(), 0);
@@ -30,6 +31,7 @@ int ManagedSocket::Recieve(char* buffer, int bufferLen)
 	int result = recv(this->socket, buffer, bufferLen, 0);
 
 	CheckForErrors(SOCKET_ERR, result, "Recieving Error");
+	// Nirs debugLevel == verbosity
 	if (result == 0 && debugLevel >= 1) {
 		// Connection closed
 		cout << "Connection closed!" << endl;
