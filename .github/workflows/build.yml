@@ -13,7 +13,7 @@ jobs:
 
       - name: Checkout Visual Studio
         run: |
-          & "ls C:/"
+          & "dir C:\"
 
       - name: Setup Visual Studio Build Environment
         run: |
