@@ -12,8 +12,7 @@ jobs:
       - uses: actions/checkout@v4
 
       - name: Checkout Visual Studio
-        run: |
-          & "dir C:\"
+        run: dir /
 
       - name: Setup Visual Studio Build Environment
         run: |
